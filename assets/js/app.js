@@ -78,9 +78,8 @@ function onlyNumberKey(evt) {
 
 btnCalcular.addEventListener('click', (e) => {
     const selectIndicador = document.getElementById('indicadores').value;
-    const inputMonto = document.getElementById('monto').value.replace(/\./g, '');
-    document.getElementById('monto').value = inputMonto;
-    
+    const inputMonto = document.getElementById('monto').value.replace(/\./g, ''); //quita los puntos
+   
     let montoValor = inputMonto.trim();
     if (montoValor === '' || montoValor === 0) {
         msgError.innerHTML = 'Tienes que ingresar un valor.';
