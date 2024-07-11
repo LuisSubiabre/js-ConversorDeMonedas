@@ -1,13 +1,15 @@
 const selectIndicador = document.getElementById('indicadores');
 const msgError = document.getElementById('error');
+const msgErrorTry = document.getElementById('errorTry');
 const btnCalcular = document.getElementById('btnCalcular');
 
 let myLineChart;
 
 
 async function calculaConversion(indicador, inputMonto) {
+    
+try{
     const spanResultado = document.getElementById('resultado');
-
     const apiURL = 'https://mindicador.cl/api/' + indicador;
     const res = await fetch(apiURL);
     const datos = await res.json();
@@ -19,18 +21,24 @@ async function calculaConversion(indicador, inputMonto) {
  </div>
     `;
     return datos;
+}catch(e){
+    msgErrorTry.innerHTML = `<div class="notification is-danger">Ha ocurrido un error: ${e}</div>`;
+}
+
 }
 
 async function renderGrafica(indicador,inputMonto) {
-    const datos = await calculaConversion(indicador, inputMonto);
-    const config = confGrafico(datos, indicador);
-    const canva = document.querySelector(".grafica");
-    canva.style.display = 'block';
-    if (myLineChart) {
-        myLineChart.destroy();
-    }
-    const chartDOM = document.getElementById("myChart");
-    myLineChart = new Chart(chartDOM, config);
+
+        const datos = await calculaConversion(indicador, inputMonto);
+        const config = confGrafico(datos, indicador);
+        const canva = document.querySelector(".grafica");
+        canva.style.display = 'block';
+        if (myLineChart) {
+            myLineChart.destroy();
+        }
+        const chartDOM = document.getElementById("myChart");
+        myLineChart = new Chart(chartDOM, config);
+
 }
 
 
@@ -83,10 +91,17 @@ btnCalcular.addEventListener('click', (e) => {
     
     let montoValor = inputMonto.trim();
     if (montoValor === '' || montoValor === 0) {
-        msgError.innerHTML = 'Tienes que ingresar un valor.';
+        msgError.innerHTML = `<div class="notification is-danger">Tienes que ingresar un valor.</div>`;
+        document.getElementById('monto').style.backgroundColor = 'red';         
+        document.getElementById('monto').style.color = 'white';
+
+        
     } else {
         msgError.innerHTML = '';
+        document.getElementById('monto').style.backgroundColor = '';
+        document.getElementById('monto').style.color = '';
         renderGrafica(selectIndicador, inputMonto);
     }
     
 });
+
